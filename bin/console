@@ -1,0 +1,30 @@
+#!/usr/bin/env php
+<?php declare(strict_types = 1);
+
+use App\Command\GenerateQrCodeCommand;
+use App\Command\GenerateSecretCommand;
+use App\Command\ValidateKeyCommand;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+/** @var ContainerInterface $container */
+$container = require __DIR__ . '/../bootstrap/container.php';
+
+$application = new Application();
+
+$command = $container->get(GenerateSecretCommand::class);
+$application->add($command);
+
+$command = $container->get(GenerateQrCodeCommand::class);
+$application->add($command);
+
+$command = $container->get(ValidateKeyCommand::class);
+$application->add($command);
+
+$input = new ArgvInput();
+$output = new ConsoleOutput();
+$application->run($input, $output);
